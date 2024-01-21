@@ -1,0 +1,49 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: sammy
+        uid: 1000
+      context: ./
+      dockerfile: Dockerfile
+    image: challenge
+    container_name: challenge-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - challenge
+
+  db:
+    image: postgres
+    container_name: challenge-db
+    restart: always
+    volumes:
+        - ./docker-compose/pgsql:/docker-entrypoint-initdb.d
+#        - ./docker-compose/pgsql:/var/lib/postgresql/data
+    environment:
+#      POSTGRES_PASSWORD: ${DB_PASSWORD}
+#      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: appuser123
+    ports:
+        - 5432:5432
+    networks:
+        - challenge
+
+  nginx:
+    image: nginx:alpine
+    container_name: challenge-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d
+    networks:
+      - challenge
+
+networks:
+    challenge:
+        driver: bridge
