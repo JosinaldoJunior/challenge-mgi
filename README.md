@@ -14,6 +14,13 @@ Projeto desafio MGI.
 ## Rodar aplicação local (DOCKER)
 
 **1º rode o comando:**
+```
+cp .env.example .env 
+```
+Deve gerar o arquivo .env com base no .env.example.
+
+
+**2º rode o comando:**
 
 ```
 make up
@@ -21,7 +28,7 @@ make up
 
 Deve subir os containers da aplicação e banco de dados.
 
-**2º rode o comando:**
+**3º rode o comando:**
 
 ```
 make install
@@ -29,7 +36,7 @@ make install
 
 Deve instalar as dependências da aplicação.
 
-**3º rode o comando:**
+**4º rode o comando:**
 
 ```
 make migrate
@@ -38,10 +45,38 @@ make migrate
 Deve rodar as migrations para criar a base de dados e as seeders para popular as tabelas.
 
 
+**Após estes passos a aplicação deve estar disponível na url abaixo:**
+```
+http://localhost:8000/
+```
+
+## CURL para testes
+Para executar os testes basta executar o comando abaixo:
+
+**Criar usuário:**
+```
+curl --request POST \
+  --url http://localhost:8000/api/user \
+  --header 'Content-Type: application/json' \
+  --header 'User-Agent: insomnia/8.6.0' \
+  --data '{
+	"name": "teste",
+	"email": "teste24@teste.com",
+	"password": "@Restte2",
+	"passwordConfirmation": "@Restte2"
+}'
+```
+
+**Listar usuários:**
+```
+curl --request GET \
+--url http://localhost:8000/api/user
+```
+
 ## Rodar testes
 Para executar os testes basta executar o comando abaixo:
 
 
 ```
-make tests
+make test
 ```
