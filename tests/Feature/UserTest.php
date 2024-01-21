@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Arr;
 use Tests\TestCase;
 
 /**
@@ -24,7 +25,17 @@ class UserTest extends TestCase
             "password" => "@tEste24",
             "passwordConfirmation" => "@tEste24"
         ]);
-        $response->assertStatus(201);
+
+        $response->assertStatus(201)
+        ->assertJsonStructure([
+            'data' => [
+                'id',
+                'name',
+                'email',
+                'created_at',
+                'updated_at',
+            ]
+        ]);
     }
 
     /**
@@ -50,6 +61,7 @@ class UserTest extends TestCase
         ];
         User::factory()->create($data);
         $response = $this->post('api/user', $data);
+        $this->assertEquals('Este endereço de e-mail já está sendo utilizado.', Arr::first($response->json()['errors']['email']));
         $response->assertStatus(422);
     }
 
@@ -58,7 +70,9 @@ class UserTest extends TestCase
      */
     public function test_get_all_users(): void
     {
+        User::factory(10)->create();
         $response = $this->get('api/user');
+        $this->assertTrue($response->json()['meta']['total'] === 10);
         $response->assertStatus(200);
     }
 }
