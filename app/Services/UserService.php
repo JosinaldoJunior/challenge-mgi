@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Repositories\IUserRepository;
 use Illuminate\Support\Facades\Hash;
 use \Illuminate\Pagination\LengthAwarePaginator;
 use \App\Models\User;
@@ -14,9 +15,9 @@ use \App\Models\User;
 class UserService implements IUserService
 {
     /**
-     * @param IUserService $userRepository
+     * @param IUserRepository $userRepository
      */
-    public function __construct(private readonly IUserService $userRepository)
+    public function __construct(private IUserRepository $userRepository)
     {
     }
 
